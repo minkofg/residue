@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>残响之馆 · RESIDUE</title>
+<style>
+html,body{margin:0;height:100%;background:#000;overflow:hidden;font-family:"Microsoft YaHei","PingFang SC","Noto Sans SC","Hiragino Sans GB",sans-serif}
+canvas{display:block;cursor:none}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<!-- 加载顺序即执行顺序；工具（测试、打包试玩版）也从这里读取文件列表 -->
+<script>
+// 出错时把错误直接显示在屏幕上（黑屏时截图给开发者就能定位）。
+// 同一条错误只占一行（后面记次数）；截完图点一下红框就关掉，免得一直挡住血量和弹药。
+// 关掉之后同一条错误不再弹出，出现新的错误才会重新显示。
+(function () {
+  var box = null, seen = {}, lines = [];
+  function where(e) {
+    if (!e.filename) return '';
+    var f = String(e.filename).split(/[?#]/)[0].split('/').pop();
+    try { f = decodeURIComponent(f); } catch (x) { /* 解不开就保留原样 */ }
+    return '  @' + f + ':' + e.lineno;
+  }
+  function render() {
+    var out = '出错了（请截图）—— 截完图点这里关闭\n';
+    for (var i = 0; i < lines.length; i++) out += lines[i] + (seen[lines[i]] > 1 ? '  ×' + seen[lines[i]] : '') + '\n';
+    box.textContent = out;
+  }
+  function hide() { if (box && box.parentNode) box.parentNode.removeChild(box); box = null; lines = []; }
+  function show(m) {
+    m = String(m);
+    if (seen[m]) { seen[m]++; if (box && lines.indexOf(m) >= 0) render(); return; }
+    seen[m] = 1; lines.push(m);
+    if (!box) {
+      box = document.createElement('pre'); box.id = 'errbox'; box.title = '点击关闭';
+      box.style.cssText = 'position:fixed;left:8px;right:8px;bottom:8px;max-height:40%;overflow:auto;margin:0;padding:10px;background:rgba(80,0,0,.92);color:#fff;font:12px/1.5 monospace;z-index:99999;white-space:pre-wrap;cursor:pointer';
+      box.addEventListener('mousedown', function (e) { e.stopPropagation(); });   // 点红框不算开枪、不算点菜单
+      box.addEventListener('click', hide);
+      (document.body || document.documentElement).appendChild(box);
+    }
+    render();
+  }
+  window.addEventListener('error', function (e) { show((e.message || e) + where(e)); });
+  window.addEventListener('unhandledrejection', function (e) { show('Promise: ' + (e.reason && e.reason.message || e.reason)); });
+})();
+</script>
+<script src="core/canvas.js"></script>
+<script src="core/util.js"></script>
+<script src="world/grid.js"></script>
+<script src="config/map1.js"></script>
+<script src="world/tiles.js"></script>
+<script src="render/map.js"></script>
+<script src="world/physics.js"></script>
+<script src="config/content.js"></script>
+<script src="config/enemies.js"></script>
+<script src="config/director.js"></script>
+<script src="config/player.js"></script>
+<script src="config/items.js"></script>
+<script src="config/ambience.js"></script>
+<script src="config/weapons.js"></script>
+<script src="config/triggers.js"></script>
+<script src="config/map2.js"></script>
+<script src="config/map3.js"></script>
+<script src="config/rank.js"></script>
+<script src="world/level.js"></script>
+<script src="game/state.js"></script>
+<script src="player/inventory.js"></script>
+<script src="audio/audio.js"></script>
+<script src="audio/zombie.js"></script>
+<script src="audio/creatures.js"></script>
+<script src="audio/music.js"></script>
+<script src="game/globals.js"></script>
+<script src="game/storage.js"></script>
+<script src="game/settings.js"></script>
+<script src="game/timers.js"></script>
+<script src="game/triggers.js"></script>
+<script src="game/puzzles.js"></script>
+<script src="world/noise.js"></script>
+<script src="input/input.js"></script>
+<script src="game/save.js"></script>
+<script src="player/interact.js"></script>
+<script src="player/items.js"></script>
+<script src="combat/combat.js"></script>
+<script src="combat/hazards.js"></script>
+<script src="combat/throwables.js"></script>
+<script src="ai/nav.js"></script>
+<script src="ai/doors.js"></script>
+<script src="game/warp.js"></script>
+<script src="game/update.js"></script>
+<script src="player/update.js"></script>
+<script src="game/events.js"></script>
+<script src="ai/enemies.js"></script>
+<script src="ai/grab.js"></script>
+<script src="ai/licker.js"></script>
+<script src="ai/slime.js"></script>
+<script src="ai/vine.js"></script>
+<script src="ai/hunter.js"></script>
+<script src="ai/berserk.js"></script>
+<script src="ai/lazarus.js"></script>
+<script src="ai/executioner.js"></script>
+<script src="game/effects.js"></script>
+<script src="render/entities.js"></script>
+<script src="render/lighting.js"></script>
+<script src="render/world.js"></script>
+<script src="ui/hud.js"></script>
+<script src="ui/screens.js"></script>
+<script src="ui/intro.js"></script>
+<script src="ui/menus.js"></script>
+<script src="ui/inventory.js"></script>
+<script src="main.js"></script>
+
+</body>
+</html>

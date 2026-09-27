@@ -1,0 +1,24 @@
+{
+  "name": "residue",
+  "version": "1.1.0",
+  "description": "残响之馆 RESIDUE - 俯视角生存恐怖游戏",
+  "private": true,
+  "scripts": {
+    "build:html": "node tools/build-demo.js --all && node tools/puzzle-doc.js",
+    "build:release": "node tools/build-demo.js --release",
+    "build:demo": "node tools/build-demo.js",
+    "test": "node tools/sim-tests.js && node tools/check-maps.js && node tools/economy.js --strict && node tools/check-plan.js",
+    "check": "node tools/check.js",
+    "check:maps": "node tools/check-maps.js",
+    "check:plan": "node tools/check-plan.js",
+    "economy": "node tools/economy.js",
+    "perf": "node tools/perf.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "author": {
+    "name": "Residue Team"
+  },
+  "license": "UNLICENSED"
+}
